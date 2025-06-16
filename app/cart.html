@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart - Biscuit Delight</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <h1>Your Shopping Cart</h1>
+</header>
+
+<nav>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="product.html">Products</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="nav-cart">
+    <a href="#"><i class="fas fa-user"></i> Log in</a>
+    <div class="cart-link">
+      <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+      <span class="cart-count">0</span>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="cart-list" id="cart-items"></div>
+
+  <div class="cart-summary" id="cart-summary" style="display: none;">
+    <p>Subtotal: RM <span id="subtotal">0.00</span></p>
+    <button class="payment-button">Proceed to Payment</button>
+  </div>
+</main>
+
+<script>
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartCountSpan = document.querySelector(".cart-count");
+    cartCountSpan.textContent = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  }
+
+  function renderCart() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartContainer = document.getElementById("cart-items");
+    const subtotalElement = document.getElementById("subtotal");
+    const summarySection = document.getElementById("cart-summary");
+
+    cartContainer.innerHTML = "";
+    let subtotal = 0;
+
+    if (cart.length === 0) {
+      cartContainer.innerHTML = "<p>Your cart is empty.</p>";
+      summarySection.style.display = "none";
+    } else {
+      summarySection.style.display = "block";
+      cart.forEach((item, index) => {
+        const quantity = item.quantity || 1;
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "cart-item";
+        itemDiv.innerHTML = `
+          <img src="${item.image}" alt="${item.title}" class="cart-image"/>
+          <div class="cart-details">
+            <h2>${item.title}</h2>
+            <p>Price: RM ${item.price.toFixed(2)}</p>
+
+            <div class="quantity-control">
+              <button onclick="updateQuantity(${index}, -1)">−</button>
+              <input type="number" value="${quantity}" min="1" onchange="manualQuantity(${index}, this.value)">
+              <button onclick="updateQuantity(${index}, 1)">+</button>
+            </div>
+
+            <p>Total: RM ${(item.price * quantity).toFixed(2)}</p>
+            <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+          </div>
+        `;
+        cartContainer.appendChild(itemDiv);
+        subtotal += item.price * quantity;
+      });
+
+      subtotalElement.textContent = subtotal.toFixed(2);
+    }
+
+    updateCartCount();
+  }
+
+  function removeFromCart(index) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+
+  function updateQuantity(index, delta) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart[index].quantity = (cart[index].quantity || 1) + delta;
+    if (cart[index].quantity < 1) cart[index].quantity = 1;
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+
+  function manualQuantity(index, value) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart[index].quantity = Math.max(1, parseInt(value) || 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+
+  window.onload = renderCart;
+</script>
+
+</body>
+</html>

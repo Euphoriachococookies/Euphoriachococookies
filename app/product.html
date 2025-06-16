@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Products - Biscuit Delight</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="product-page">
+  <div class="background-overlay">
+    <header>
+      <h1>Euphoria Chocolate Chip Cookies</h1>
+      <p>Crunchy joy in every bite! 🍪</p>
+    </header>
+
+    <nav>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="product.html" class="active">Products</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="nav-cart">
+        <a href="#"><i class="fas fa-user"></i> Log in</a>
+        <div class="cart-link">
+          <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+          <span class="cart-count">0</span>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <div class="product">
+        <div class="card">
+          <img src="../image/biscuit1.jpg" alt="Chocolate Biscuit">
+          <h3>Chocolate Biscuit</h3>
+          <p>RM 10.00</p>
+          <div class="card-buttons">
+    <button 
+      onclick="addToCart(this)" 
+      data-name="Chocolate Biscuit" 
+      data-price="10.00" 
+      data-image="../image/biscuit1.jpg">
+      Add to Cart
+    </button>
+    <button disabled class="buy-now-btn">Buy Now</button>
+  </div>
+      </div>
+    </main>
+
+  <footer class="footer-bottom">
+      <p>© 2025 Euphoria Cookies. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+    <script>
+      function addToCart(button) {
+        const name = button.getAttribute("data-name");
+        const price = parseFloat(button.getAttribute("data-price"));
+        const image = button.getAttribute("data-image");
+
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        cart.push({ title: name, price: price, image: image, quantity: 1 });
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert(`${name} added to cart.`);
+        updateCartCount(); 
+      }
+
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        document.querySelector(".cart-count").textContent = cart.length;
+      }
+
+      window.onload = updateCartCount;
+    </script>
+  </div>
+</body>
+</html>
