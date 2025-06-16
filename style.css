@@ -8,7 +8,7 @@
 body {
     font-family: 'Noto Sans', sans-serif;
     background-color: #3b2f2f; 
-    background-image: url('../image/background.png');
+    background-image: url('image/background.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed; 
